@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency Response Dashboard - NovaCare{% endblock %}
+
+{% block page_title %}🚨 NovaCare Emergency Response{% endblock %}
+{% block page_subtitle %}Fall Detection System • Critical Incident Management & First Responder Coordination{% endblock %}
+
+{% block extra_head %}
+<style>
+    .emergency-pulse {
+        animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes emergency-flash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+    .emergency-flash {
+        animation: emergency-flash 2s linear infinite;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    
+    <!-- CRITICAL ALERT HEADER -->
+    <div class="glass rounded-2xl p-8 border-4 border-accent-red card relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-accent-red/10 rounded-full blur-3xl"></div>
+        <div class="relative">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="text-6xl emergency-flash">⚠️</span>
+                        <div>
+                            <h1 id="eventNature" class="text-4xl font-black text-accent-red uppercase mb-2">FALL DETECTED</h1>
+                            <div class="flex items-center space-x-6 text-lg">
+                                <div class="flex items-center text-gray-300">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="font-mono font-bold" id="timeElapsed">00:00:00</span>
+                                </div>
+                                <div class="flex items-center text-gray-400">
+                                    <span class="font-medium">ID:</span>
+                                    <span id="emergencyId" class="font-mono ml-2">{{ emergency_id or 'emg_001' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="updateStatusBtn" class="bg-gradient-to-r from-accent-red to-red-600 hover:from-accent-red hover:to-red-700 text-white px-8 py-4 rounded-xl font-black text-lg hover-lift">
+                    UPDATE STATUS
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Critical Information -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Location Information -->
+            <div class="glass rounded-2xl p-6 border-l-4 border-accent-red card">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accent-red/20 flex items-center justify-center text-2xl mr-3">📍</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">LOCATION</h2>
+                        <p class="text-sm text-gray-400">Emergency coordinates</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-accent-red/10 border-2 border-accent-red/30 rounded-xl p-4">
+                        <p class="text-sm text-gray-400 mb-1">GPS Coordinates</p>
+                        <p id="coordinates" class="text-3xl font-mono font-bold text-accent-red">40.7128, -74.0060</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass rounded-lg p-4 border border-dark-600">
+                            <p class="text-xs text-gray-400 mb-1">Address</p>
+                            <p id="address" class="font-semibold text-white text-sm">123 Main Street, NY 10001</p>
+                        </div>
+                        <div class="glass rounded-lg p-4 border border-dark-600">
+                            <p class="text-xs text-gray-400 mb-1">Unit/Floor</p>
+                            <p id="unitFloor" class="font-semibold text-white text-sm">Apt 4B, 4th Floor</p>
+                        </div>
+                    </div>
+                    <div class="bg-accent-blue/10 border-2 border-accent-blue/30 rounded-lg p-4">
+                        <p class="text-xs text-gray-400 mb-2">🔑 Access Notes</p>
+                        <p id="accessNotes" class="text-sm font-medium text-white">Doorman on duty 24/7. Elevator access available.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Patient Critical Data -->
+            <div class="glass rounded-2xl p-6 border-l-4 border-accent-orange card">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accent-orange/20 flex items-center justify-center text-2xl mr-3">👤</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">PATIENT SUMMARY</h2>
+                        <p class="text-sm text-gray-400">Critical medical information</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="glass rounded-lg p-3 text-center border border-dark-600">
+                        <p class="text-xs text-gray-400">Age</p>
+                        <p id="patientAge" class="text-2xl font-bold text-white">72</p>
+                    </div>
+                    <div class="glass rounded-lg p-3 text-center border border-dark-600">
+                        <p class="text-xs text-gray-400">Gender</p>
+                        <p id="patientGender" class="text-2xl font-bold text-white">Male</p>
+                    </div>
+                    <div class="glass rounded-lg p-3 text-center border border-dark-600">
+                        <p class="text-xs text-gray-400">Status</p>
+                        <p id="livingStatus" class="text-lg font-bold text-white">Alone</p>
+                    </div>
+                </div>
+                <div class="bg-accent-orange/10 border-2 border-accent-orange/30 rounded-lg p-4 mb-4">
+                    <p class="text-sm font-bold text-accent-orange mb-2">⚠️ ALLERGIES</p>
+                    <p id="allergies" class="font-semibold text-white">Penicillin</p>
+                </div>
+                <div class="bg-accent-blue/10 border-2 border-accent-blue/30 rounded-lg p-4">
+                    <p class="text-sm font-bold text-accent-blue mb-2">💊 CURRENT MEDICATIONS</p>
+                    <ul id="medications" class="text-sm text-white space-y-1">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-accent-blue rounded-full mr-2"></span>
+                            Alendronate (Osteoporosis)
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-accent-blue rounded-full mr-2"></span>
+                            Lisinopril (Blood Pressure)
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-accent-blue rounded-full mr-2"></span>
+                            Aspirin (Blood thinner)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Immediate Concerns -->
+            <div class="glass rounded-2xl p-6 border-4 border-accent-red/30 card">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accent-red/20 flex items-center justify-center text-2xl mr-3">⚠️</div>
+                    <h2 class="text-xl font-bold text-accent-red">IMMEDIATE CONCERNS</h2>
+                </div>
+                <ul id="immediateConcerns" class="space-y-3">
+                    <li class="glass rounded-lg p-4 border-l-4 border-accent-red flex items-center">
+                        <span class="text-accent-red mr-3 text-xl">●</span>
+                        <span class="font-semibold text-white">Possible hip fracture</span>
+                    </li>
+                    <li class="glass rounded-lg p-4 border-l-4 border-accent-red flex items-center">
+                        <span class="text-accent-red mr-3 text-xl">●</span>
+                        <span class="font-semibold text-white">Patient has osteoporosis</span>
+                    </li>
+                    <li class="glass rounded-lg p-4 border-l-4 border-accent-orange flex items-center">
+                        <span class="text-accent-orange mr-3 text-xl">●</span>
+                        <span class="font-semibold text-white">History of falls</span>
+                    </li>
+                    <li class="glass rounded-lg p-4 border-l-4 border-accent-orange flex items-center">
+                        <span class="text-accent-orange mr-3 text-xl">●</span>
+                        <span class="font-semibold text-white">Allergic to Penicillin</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Environmental Data -->
+            <div class="glass rounded-2xl p-6 border-l-4 border-accent-purple card">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accent-purple/20 flex items-center justify-center text-2xl mr-3">🏠</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">ENVIRONMENTAL DATA</h2>
+                        <p class="text-sm text-gray-400">Live sensor readings</p>
+                    </div>
+                </div>
+                <div id="environmentalData" class="grid grid-cols-2 gap-3">
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Smoke</p>
+                        <p class="font-semibold text-accent-green">✓ No</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Temperature</p>
+                        <p class="font-semibold text-white">22.0°C</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">CO Level</p>
+                        <p class="font-semibold text-accent-green">0 ppm</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Air Quality</p>
+                        <p class="font-semibold text-accent-green">Good</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Audio</p>
+                        <p class="font-semibold text-accent-orange">Distress call detected</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Doors</p>
+                        <p class="font-semibold text-accent-orange">🔒 Locked</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Response & Actions -->
+        <div class="space-y-6">
+            <!-- Response Status -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Response Status</h3>
+                <div id="responseStatus" class="mb-4">
+                    <div class="bg-accent-orange/20 border-2 border-accent-orange rounded-lg p-4">
+                        <p class="font-bold text-accent-orange text-sm mb-1">⏳ DISPATCHED</p>
+                        <p class="text-xs text-gray-300">Units en route to location</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <select id="statusSelect" class="w-full bg-dark-700 text-white px-4 py-3 rounded-lg border border-dark-600 focus:border-accent-blue outline-none font-semibold">
+                        <option value="DISPATCHED">Dispatched</option>
+                        <option value="EN_ROUTE">En Route</option>
+                        <option value="ON_SCENE">On Scene</option>
+                        <option value="RESOLVED">Resolved</option>
+                    </select>
+                    <button id="submitStatusBtn" class="w-full bg-gradient-to-r from-accent-blue to-blue-600 hover:from-accent-blue hover:to-blue-700 text-white py-3 rounded-lg font-bold hover-lift">
+                        Submit Update
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Nearest Responders -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Nearest Units</h3>
+                <div id="nearestResponders" class="space-y-3">
+                    <div class="bg-accent-blue/20 border-2 border-accent-blue rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-white">EMS-12</span>
+                            <span class="text-xs bg-accent-blue text-white px-3 py-1 rounded-full font-bold">NEAREST</span>
+                        </div>
+                        <p class="text-sm text-gray-300 mb-1">📍 1.2 km away</p>
+                        <p class="text-sm font-semibold text-accent-blue">⏱️ ETA: 4 minutes</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-white">EMS-08</span>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-1">📍 2.1 km away</p>
+                        <p class="text-sm font-semibold text-gray-300">⏱️ ETA: 6 minutes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Nearby Facilities -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Nearby Hospitals</h3>
+                <div id="nearbyFacilities" class="space-y-3">
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-white text-sm">NY General Hospital</span>
+                            <span class="text-xs bg-accent-green/20 text-accent-green px-2 py-1 rounded-full font-bold">Level I</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">Emergency Room</p>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-400">📍 2.3 km</span>
+                            <span class="text-gray-400">⏱️ 5 min</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs mt-2">
+                            <span class="text-gray-400">Wait: 15 min</span>
+                            <span class="font-semibold text-accent-green">🛏️ 3 beds</span>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-white text-sm">Downtown Medical</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">Urgent Care</p>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-400">📍 1.1 km</span>
+                            <span class="text-gray-400">⏱️ 3 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Healthcare Proxy -->
+            <div class="glass rounded-2xl p-6 border-2 border-accent-green/30 card">
+                <h3 class="text-lg font-bold text-white mb-3">👨‍⚕️ Healthcare Proxy</h3>
+                <div id="healthcareProxy" class="space-y-2">
+                    <p class="font-semibold text-white">Jane Doe</p>
+                    <p class="text-sm text-gray-400">+1-555-0101</p>
+                    <div class="flex items-center space-x-2 mt-3">
+                        <span class="text-sm text-accent-green">✓ Contacted</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">ETA: 15 minutes</p>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Quick Actions</h3>
+                <div class="space-y-3">
+                    <button class="w-full bg-gradient-to-r from-accent-green to-green-600 hover:from-accent-green hover:to-green-700 text-white py-3 rounded-lg font-bold hover-lift">
+                        🔊 Audio Channel
+                    </button>
+                    <button id="sendReassuranceBtn" class="w-full bg-gradient-to-r from-accent-blue to-blue-600 hover:from-accent-blue hover:to-blue-700 text-white py-3 rounded-lg font-bold hover-lift">
+                        📢 Send Reassurance
+                    </button>
+                    <button class="w-full bg-gradient-to-r from-accent-purple to-purple-600 hover:from-accent-purple hover:to-purple-700 text-white py-3 rounded-lg font-bold hover-lift">
+                        📋 Log Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- System Info Footer -->
+    <div class="glass rounded-2xl p-6 border border-dark-600 card">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <h4 class="text-sm font-bold text-white mb-2">🛡️ NovaCare System</h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Intelligent Fall Detection using Edge AI (MediaPipe Pose) on Raspberry Pi 5. 
+                    Achieves ≥95% accuracy with &lt;2s alert response time.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-2">📡 IoT Architecture</h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    4-Layer Model: Sensing → Gateway → Processing → Application. 
+                    MQTT protocol for real-time communication.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-2">🎯 Mission</h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Real-time monitoring for elderly & individuals with physical disabilities. 
+                    Automated emergency response with instant caregiver alerts.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Powered by Stitch Watermark -->
+    <div class="mt-6 text-center">
+        <div class="group inline-block cursor-pointer">
+            <p class="text-gray-500 transition-all duration-300 group-hover:text-accent-blue group-hover:scale-110 inline-flex items-center">
+                <span class="mr-2">⚡</span>
+                <span class="text-sm">Powered by</span>
+                <span class="ml-2 font-bold text-lg gradient-text group-hover:animate-pulse">Stitch</span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/emergency/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/emergency/ui.js') }}"></script>
+
+<script>
+// Timer functionality
+let startTime = new Date();
+setInterval(() => {
+    const now = new Date();
+    const elapsed = Math.floor((now - startTime) / 1000);
+    
+    const hours = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+    const seconds = (elapsed % 60).toString().padStart(2, '0');
+    
+    document.getElementById('timeElapsed').textContent = `${hours}:${minutes}:${seconds}`;
+}, 1000);
+</script>
+{% endblock %}

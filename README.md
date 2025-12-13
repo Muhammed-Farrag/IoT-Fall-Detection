@@ -1,254 +1,416 @@
-# NovaCare Fall Detection System - IoT Dashboard UI
+# 🛡️ NovaCare Fall Detection System
 
-A modern, **dark-themed** professional analytics dashboard for the IoT Fall Detection System. This is a **UI-only** Flask project with no backend logic - designed specifically for the NovaCare assistive rover module using Edge AI and Computer Vision.
+<div align="center">
 
-## ✨ Features
+![NovaCare](https://img.shields.io/badge/NovaCare-Fall%20Detection-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square)
+![Flask](https://img.shields.io/badge/Flask-2.3.0-green?style=flat-square)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
-### 🎯 Landing Page
-- **Dark Modern Theme** inspired by professional admin dashboards
-- IoT Architecture Overview with 4-layer visualization
-- System objectives based on fall detection requirements
-- Feature showcase with ≥95% detection accuracy
-- Team members display
-- Fully responsive design
+**An intelligent IoT-based fall detection system designed to enhance safety for elderly individuals and people with physical disabilities.**
 
-### 📊 Professional Dashboard
-- **Sidebar Navigation** - Fixed left sidebar with menu items
-- **Top Navigation Bar** - Search box, notifications, user dropdown
-- **KPI Cards** - 4 gradient cards showing key metrics:
-  - New Alerts (with percentage change)
-  - Device Uptime
-  - Camera Health
-  - MQTT Status
-- **Analytics Charts** (Chart.js):
-  - Detection Activity (Line chart with dual datasets)
-  - Alert Types (Donut chart with percentages)
-- **System Performance** - Progress bars for CPU, Memory, Detection Rate, Network
-- **Quick Actions** - Interactive buttons for common tasks
-- **Recent Activity** - Timeline of system events
+[Features](#-key-features) • [Architecture](#-iot-architecture) • [Installation](#-installation) • [Usage](#-usage) • [Team](#-development-team)
 
-### 📑 Additional Pages
-- **Alerts Page** - Table view of all system alerts with severity badges
-- **System Health** - Detailed status cards for all components
-- **Login Page** - Modern card-based authentication UI
+</div>
 
-### 🎨 Design Highlights
-- **Dark Professional Theme** - Inspired by WowDash and modern SaaS dashboards
-- **IoT Architecture Focus** - 4-Layer IoT model visualization
-- **Professional Color Palette** - Blue primary with gradient accents
-- **Smooth Animations** - Hover effects, transitions, card animations
-- **Bootstrap 5** - Responsive grid and components
-- **Font Awesome Icons** - Professional icon set
-- **Chart.js Integration** - Beautiful interactive charts with dark theme
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [IoT Architecture](#-iot-architecture)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Dashboards](#-dashboards)
+- [Development Team](#-development-team)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🎯 Overview
+
+**NovaCare** is a comprehensive fall detection system that leverages **Edge AI** and **Computer Vision** to provide real-time monitoring and automated emergency response for vulnerable individuals. The system integrates seamlessly with assistive robotics to bridge the gap between accident detection and assistance arrival.
+
+### Project Objectives
+
+- ✅ **Real-Time Monitoring**: Continuously analyze user posture using computer vision
+- ✅ **Accurate Detection**: Detect fall events with **≥95% accuracy** using pose estimation models
+- ✅ **Automated Response**: Initiate emergency alerts without user intervention
+- ✅ **Instant Notification**: Dispatch alerts to caregivers with identity, location, and event details
+- ✅ **Response Time**: Achieve **<2 seconds** end-to-end latency
+
+---
+
+## ✨ Key Features
+
+### 🏥 **Multi-Dashboard Interface**
+
+#### 1️⃣ Primary User Dashboard
+- 🎤 Multimodal communication (Voice, Sign Language, Touch)
+- 💊 Medication management and reminders
+- 🤖 Autonomous follow mode
+- 👁️ Visual assistance (Object identification, Text reading)
+
+#### 2️⃣ Caregiver Dashboard
+- 📹 Live video monitoring
+- 📍 Real-time GPS location tracking
+- 🔔 Instant fall detection alerts
+- 📊 Activity and wellbeing metrics
+- 🔋 Battery status monitoring
+
+#### 3️⃣ Health Professional Dashboard
+- 📈 24-hour vitals trends (Heart Rate, BP, SpO2)
+- 📉 Weekly activity pattern analysis
+- 💊 Medication adherence tracking
+- 📝 Fall incident history
+- 🩺 Clinical notes and health summaries
+
+#### 4️⃣ Emergency Service Dashboard
+- 🚨 Critical incident management
+- 📍 GPS coordinates and access notes
+- 🏥 Patient summary and allergies
+- 🌡️ Environmental sensor data
+- 🚑 Nearest EMS units and hospitals
+- ⏱️ Real-time incident timer
+
+---
+
+## 🏗️ IoT Architecture
+
+NovaCare follows the **4-Layer + Communication Protocol IoT Model** with **2 Management Pillars**:
+
+### **Layer 1: IoT Devices Layer (Sensing)**
+- 📷 HD RGB Camera for continuous video capture
+- 🎥 Visual sensors mounted on assistive rover
+
+### **Layer 2: IoT Gateway / Aggregation Layer**
+- 🖥️ **Raspberry Pi 5** as edge gateway device
+- 📡 Wi-Fi connectivity for cloud transmission
+- 🔗 USB/CSI camera interface
+
+### **Layer 3: Processing Engine / Event Processing Layer**
+
+#### Edge Processing (On-Device)
+- 🧠 AI Inference Engine: MediaPipe Pose / YOLOv8-Pose
+- 📊 Real-time skeletal landmark extraction
+- ⚡ Fall detection algorithm analyzing keypoint velocity
+
+#### Cloud Event Processing
+- 📨 Receives "Fall Detected" JSON payloads
+- 🔔 Triggers notification microservices (SMS/Email/Push)
+- 💾 Event logging and analytics
+
+### **Layer 4: Application Layer (API & Dashboard)**
+- 🌐 **Guardian Dashboard**: Web portal for caregivers
+- 📱 RESTful APIs for mobile/web applications
+- 🔐 Secure authentication and authorization
+
+### **Communications Layer**
+- 📡 **MQTT Protocol**: Lightweight real-time message transmission
+- 🔒 Encrypted data channels
+- ⚡ Low-latency alert propagation
+
+### **Management Pillars**
+
+#### 🔧 Pillar 1: Devices Manager
+- ❤️ Health monitoring for cameras and edge devices
+- 📦 OTA (Over-the-Air) firmware updates
+- 🔍 Performance metrics tracking
+
+#### 🔐 Pillar 2: Identity & Access Manager (IAM)
+- 🔑 Authentication for dashboard access
+- 🛡️ Device security with API keys and certificates
+- 🔒 End-to-end encryption for video feeds
+- 👥 Role-based access control (RBAC)
+
+---
+
+## 🛠️ Technology Stack
+
+### Backend
+- **Framework**: Flask 2.3.0 (Python)
+- **Architecture**: SOLID Principles, Clean Architecture
+- **Patterns**: Dependency Injection, Abstract Base Classes (ABC)
+
+### Frontend
+- **HTML5** with Jinja2 templating
+- **Tailwind CSS** for modern, responsive UI
+- **Vanilla JavaScript (ES6+)** - Modular architecture (API/UI separation)
+- **Chart.js** for data visualization
+
+### AI/ML
+- **MediaPipe Pose** for pose estimation
+- **YOLOv8-Pose** for fall detection
+- **Edge AI** on Raspberry Pi 5
+
+### Communication
+- **MQTT** for real-time alerts
+- **RESTful APIs** for data exchange
+
+### Design
+- 🌑 Dark theme with glassmorphism effects
+- 🎨 Smooth animations and transitions
+- ♿ Accessibility-first design
+
+---
 
 ## 📁 Project Structure
 
 ```
 IoT-Fall-Detection/
-├── run.py                          # Flask application
+│
+├── app/
+│   ├── __init__.py                 # Flask application factory
+│   │
+│   ├── blueprints/                 # Flask Blueprints (Routes)
+│   │   ├── __init__.py
+│   │   ├── primary_user.py         # Primary user routes
+│   │   ├── caregiver.py            # Caregiver routes
+│   │   ├── health_professional.py  # Health pro routes
+│   │   └── emergency.py            # Emergency service routes
+│   │
+│   ├── services/                   # Business Logic Layer
+│   │   ├── __init__.py
+│   │   ├── communication_service.py
+│   │   ├── health_service.py
+│   │   ├── navigation_service.py
+│   │   ├── caregiver_service.py
+│   │   ├── health_professional_service.py
+│   │   └── emergency_service.py
+│   │
+│   ├── interfaces/                 # Abstract Base Classes (DIP)
+│   │   ├── __init__.py
+│   │   ├── input_handler.py
+│   │   ├── notification_system.py
+│   │   ├── medical_knowledge_base.py
+│   │   ├── vision_service.py
+│   │   └── settings_service.py
+│   │
+│   ├── models/                     # Data Models
+│   │   ├── __init__.py
+│   │   └── enums.py                # Enumerations (InputMode, etc.)
+│   │
+│   ├── templates/                  # Jinja2 HTML Templates
+│   │   ├── base.html               # Base template with navigation
+│   │   ├── index.html              # Homepage
+│   │   ├── primary_user/
+│   │   │   └── dashboard.html
+│   │   ├── caregiver/
+│   │   │   └── dashboard.html
+│   │   ├── health_professional/
+│   │   │   └── dashboard.html
+│   │   └── emergency/
+│   │       └── dashboard.html
+│   │
+│   └── static/                     # Static Assets
+│       └── js/                     # JavaScript (Modular)
+│           ├── primary_user/
+│           │   ├── api.js          # API calls
+│           │   └── ui.js           # UI interactions
+│           ├── caregiver/
+│           │   ├── api.js
+│           │   └── ui.js
+│           ├── health_professional/
+│           │   ├── api.js
+│           │   └── ui.js
+│           └── emergency/
+│               ├── api.js
+│               └── ui.js
+│
+├── config.py                       # Flask configuration
+├── run.py                          # Application entry point
 ├── requirements.txt                # Python dependencies
-├── README.md                       # This file
-├── start.bat                       # Windows quick start script
-└── app/
-    ├── templates/
-    │   ├── base.html              # Base layout with Bootstrap & Chart.js
-    │   ├── index.html             # Landing page with hero section
-    │   ├── dashboard.html         # Main analytics dashboard
-    │   ├── login.html             # Login page
-    │   ├── alerts.html            # Alerts management page
-    │   └── health.html            # System health monitoring
-    └── static/
-        ├── css/
-        │   └── styles.css         # Professional dashboard styles
-        └── js/
-            └── main.js            # Interactive functions & Chart.js setup
+├── start.bat                       # Windows startup script
+├── .gitignore                      # Git ignore rules
+└── README.md                       # This file
 ```
 
-## 🚀 Quick Start
+---
 
-### Option 1: Quick Start Script (Windows)
+## 🚀 Installation
+
+### Prerequisites
+
+- **Python 3.8+**
+- **pip** (Python package manager)
+- **Git**
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/IoT-Fall-Detection.git
+cd IoT-Fall-Detection
+```
+
+### Step 2: Create Virtual Environment
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Run the Application
+
+```bash
+python run.py
+```
+
+Or use the Windows batch script:
+
 ```bash
 start.bat
 ```
 
-### Option 2: Manual Installation
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the application
-python run.py
-```
-
-### Option 3: Virtual Environment (Recommended)
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run application
-python run.py
-```
-
-**Then open:** `http://localhost:5000`
-
-## 📱 Available Pages
-
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Homepage | Landing page with IoT architecture overview and team info |
-| `/dashboard` | Dashboard | Main analytics dashboard with charts and KPIs |
-| `/alerts` | Alerts | Alert management with severity filtering |
-| `/health` | System Health | Detailed component status monitoring |
-| `/login` | Login | Authentication page (UI only) |
-
-## 🎨 UI Components
-
-### KPI Cards (Dashboard)
-- **New Alerts** - Critical alerts count with trend indicator
-- **Device Uptime** - System availability percentage
-- **Camera Health** - Camera status indicator
-- **MQTT Status** - Broker connection status
-
-### Charts (Chart.js)
-1. **Detection Activity Chart** (Line)
-   - Dual dataset: Detection Events & Fall Alerts
-   - 7-day view with smooth curves
-   - Interactive tooltips
-   
-2. **Alert Types Chart** (Donut)
-   - Distribution of alert categories
-   - Percentage breakdown
-   - Color-coded segments
-
-### Interactive Features
-- **Simulate Alert** - Triggers fake fall detection alert
-- **Open Stream** - Opens modal for camera feed (placeholder)
-- **Refresh Dashboard** - Simulates data refresh with loading state
-- **Export Report** - Mock report download functionality
-
-### Sidebar Navigation
-- Dashboard (with active state)
-- Alerts (with notification badge)
-- System Health
-- Live Stream
-- Settings
-
-## ⚠️ Important: UI-Only Mode
-
-This is a **frontend-only** implementation with:
-- ❌ No real backend logic
-- ❌ No database connections
-- ❌ No MQTT integration
-- ❌ No camera streaming
-- ❌ No authentication system
-- ❌ No API endpoints
-
-All data shown is **dummy/placeholder data** for UI demonstration.
-
-## 🎯 Interactive Features (Frontend Only)
-
-### Working Functions
-```javascript
-simulateAlert()        // Simulates a fall detection alert
-openStreamModal()      // Opens camera stream modal
-refreshDashboard()     // Simulates data refresh
-refreshHealth()        // Updates health status display
-exportReport()         // Mock report download
-showToast(msg, type)   // Toast notification system
-```
-
-### Login Form
-When submitting the login form:
-> ⚠️ **UI-only version.** Backend integration not implemented.
-
-## 🔧 Backend Integration Roadmap
-
-When you're ready to add real functionality:
-
-1. **MQTT Service**
-   - Connect to MQTT broker
-   - Subscribe to alert topics
-   - Real-time event streaming
-
-2. **Camera Integration**
-   - OpenCV video capture
-   - WebRTC streaming
-   - Flask-SocketIO for live feed
-
-3. **AI Model Integration**
-   - MediaPipe Pose / YOLOv8-Pose
-   - Real-time inference
-   - Fall detection algorithm
-
-4. **Database Layer**
-   - SQLAlchemy ORM
-   - Store alerts, users, logs
-   - Historical data analytics
-
-5. **Authentication & IAM**
-   - Flask-Login for sessions
-   - JWT tokens for API
-   - Role-based access control
-
-6. **RESTful API**
-   - Flask-RESTful
-   - JSON endpoints
-   - API documentation
-
-## 🎨 Customization
-
-### Colors
-Edit `app/static/css/styles.css`:
-```css
-:root {
-    --primary-color: #4e73df;    /* Blue */
-    --success-color: #1cc88a;    /* Green */
-    --warning-color: #f6c23e;    /* Yellow */
-    --danger-color: #e74a3b;     /* Red */
-    --dark-bg: #0f1419;          /* Dark Background */
-    --dark-card: #1a1d23;        /* Card Background */
-}
-```
-
-### Charts
-Edit `app/static/js/main.js` - Look for `initCharts()` function to customize:
-- Dataset values
-- Colors
-- Labels
-- Chart types
-
-## 👥 Development Team
-
-- **Basant Awad** (22101405) - Computer Science
-- **Nadira El-Sirafy** (22101377) - Computer Science
-- **Noureen Yasser** (22101109) - AI Science
-- **Muhammad Mustafa** (22101336) - AI Science
-- **Ramez Asaad** (22100506) - AI Science
-
-## 📊 Technologies Used
-
-- **Backend**: Flask 3.0.0
-- **Frontend**: HTML5, CSS3, JavaScript (ES6)
-- **UI Framework**: Bootstrap 5.3
-- **Icons**: Font Awesome 6.4
-- **Charts**: Chart.js 4.4
-- **Animations**: CSS3 Transitions & Keyframes
-
-## 📄 License
-
-IoT Project - NovaCare Fall Detection System © 2025
+The application will be available at: **http://127.0.0.1:5000**
 
 ---
 
-**Built with ❤️ using Flask, Bootstrap, and Chart.js**
+## 📖 Usage
 
-*Ready for backend integration - Connect your MQTT, Camera, and AI services!*
+### 1. **Access the Homepage**
+Navigate to `http://127.0.0.1:5000` to see the NovaCare landing page with:
+- Project overview
+- IoT architecture details
+- Key features
+- Development team credits
+
+### 2. **Select a Dashboard**
+Choose from four specialized dashboards:
+- **Primary User** - For elderly users and individuals with disabilities
+- **Caregiver** - For family members and guardians
+- **Health Professional** - For doctors and medical staff
+- **Emergency** - For first responders and dispatch
+
+### 3. **Explore Features**
+Each dashboard provides real-time data, interactive charts, and role-specific functionality.
+
+---
+
+## 📊 Dashboards
+
+### 🧑 Primary User Dashboard
+![Primary User](https://img.shields.io/badge/User-Primary-blue?style=flat-square)
+
+- Communication hub with multimodal input (Voice, Sign Language, Touch)
+- Medication schedule and reminders
+- Autonomous follow mode toggle
+- Visual assistance tools
+- RAG-based medical query system
+
+**Route**: `/primary-user/dashboard`
+
+---
+
+### 👨‍👩‍👧 Caregiver Dashboard
+![Caregiver](https://img.shields.io/badge/User-Caregiver-purple?style=flat-square)
+
+- Real-time activity monitoring
+- GPS location tracking
+- Battery status
+- Wellbeing score
+- Live fall detection alerts
+
+**Route**: `/caregiver/dashboard`
+
+---
+
+### 🏥 Health Professional Dashboard
+![Health Pro](https://img.shields.io/badge/User-Health%20Pro-green?style=flat-square)
+
+- Current vital signs (HR, BP, SpO2, Temp, RR)
+- 24-hour vitals trends (Chart.js)
+- Weekly activity patterns
+- Blood pressure trends
+- Medication adherence tracking
+- Fall incident history
+- 7-day health summary
+
+**Route**: `/health-professional/dashboard`
+
+---
+
+### 🚨 Emergency Service Dashboard
+![Emergency](https://img.shields.io/badge/User-Emergency-red?style=flat-square)
+
+- Critical incident details
+- GPS coordinates and address
+- Patient summary (age, allergies, medications)
+- Immediate concerns
+- Environmental sensor data
+- Nearest EMS units
+- Nearby hospitals with availability
+- Response status updates
+- Healthcare proxy contact
+
+**Route**: `/emergency/dashboard`
+
+---
+
+## 👥 Development Team
+
+| Name | Student ID | Program | Role |
+|------|-----------|---------|------|
+| **Basant Awad** | 22101405 | Computer Science | Developer |
+| **Nadira El-Sirafy** | 22101377 | Computer Science | Developer |
+| **Noureen Yasser** | 22101109 | AI Science | AI Specialist |
+| **Muhammad Mustafa** | 22101336 | AI Science | AI Specialist |
+| **Ramez Asaad** | 22100506 | AI Science | AI Specialist |
+
+### 🏫 University Project - 2025
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 🙏 Acknowledgments
+
+- **MediaPipe** by Google for pose estimation
+- **Flask** framework for web development
+- **Tailwind CSS** for modern UI design
+- **Chart.js** for interactive data visualization
+- **Raspberry Pi Foundation** for edge computing platform
+
+---
+
+## ⚡ Powered by Stitch
+
+<div align="center">
+
+**NovaCare Fall Detection System** • © 2025 • All Rights Reserved
+
+*Enhancing safety through intelligent monitoring*
+
+</div>
+

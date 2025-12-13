@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block title %}Caregiver Dashboard - NovaCare{% endblock %}
+
+{% block page_title %}NovaCare Caregiver Dashboard{% endblock %}
+{% block page_subtitle %}Fall Detection System • Real-Time Patient Monitoring & Alert Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    
+    <!-- Patient Status Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="glass rounded-xl p-6 border border-dark-600 hover-lift card">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Current Activity</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-blue/20 flex items-center justify-center text-xl">🏃</div>
+            </div>
+            <div id="currentActivity" class="text-2xl font-bold text-white">Resting</div>
+            <div class="text-xs text-accent-green mt-2">● Connected</div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 border border-dark-600 hover-lift card">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Location</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-green/20 flex items-center justify-center text-xl">📍</div>
+            </div>
+            <div id="currentLocation" class="text-2xl font-bold text-white">Living Room</div>
+            <div class="text-xs text-gray-400 mt-2">Last updated 2 min ago</div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 border border-dark-600 hover-lift card">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Battery Level</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-orange/20 flex items-center justify-center text-xl">🔋</div>
+            </div>
+            <div id="batteryLevel" class="text-2xl font-bold text-white">85%</div>
+            <div class="w-full bg-dark-600 rounded-full h-2 mt-3">
+                <div class="bg-gradient-to-r from-accent-green to-accent-orange h-full rounded-full" style="width: 85%"></div>
+            </div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 border border-dark-600 hover-lift card">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Wellbeing Score</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center text-xl">❤️</div>
+            </div>
+            <div id="wellbeingScore" class="text-2xl font-bold text-white">8.5/10</div>
+            <div class="text-xs text-accent-green mt-2">Excellent</div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Video & Map -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Live Video Feed -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-accent-blue/20 flex items-center justify-center text-xl mr-3">📹</div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Live Video Feed</h2>
+                            <p class="text-sm text-gray-400">Real-time monitoring</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-accent-red rounded-full animate-pulse"></div>
+                        <span class="text-sm text-accent-red font-semibold">LIVE</span>
+                    </div>
+                </div>
+                <div class="relative bg-dark-800 rounded-xl overflow-hidden aspect-video border border-dark-600">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-accent-blue/20 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-gray-400 mb-2">Camera feed would display here</p>
+                            <button class="bg-gradient-to-r from-accent-blue to-blue-600 hover:from-accent-blue hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold">
+                                ▶️ Start Stream
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex space-x-2">
+                        <button class="glass px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white border border-dark-600 hover:border-accent-blue">
+                            🔇 Mute
+                        </button>
+                        <button class="glass px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white border border-dark-600 hover:border-accent-blue">
+                            📸 Snapshot
+                        </button>
+                    </div>
+                    <div class="text-sm text-gray-400">Quality: HD 720p</div>
+                </div>
+            </div>
+            
+            <!-- GPS Location Map -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center text-xl mr-3">🗺️</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">GPS Location</h2>
+                        <p class="text-sm text-gray-400">Real-time tracking</p>
+                    </div>
+                </div>
+                <div class="relative bg-dark-800 rounded-xl overflow-hidden h-64 border border-dark-600 mb-4">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-accent-purple/20 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <p class="font-semibold text-white mb-1">123 Main Street, New York</p>
+                            <p id="locationText" class="text-sm text-gray-400">Apt 4B, Living Room</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Coordinates</p>
+                        <p id="coordinates" class="font-mono text-sm font-semibold text-accent-blue">40.7128, -74.0060</p>
+                    </div>
+                    <div class="glass rounded-lg p-4 border border-dark-600">
+                        <p class="text-xs text-gray-400 mb-1">Accuracy</p>
+                        <p id="locationAccuracy" class="text-sm font-semibold text-accent-green">±5.2 meters</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Alerts & Info -->
+        <div class="space-y-6">
+            <!-- Device Status -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Device Status</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Connection</span>
+                        <span class="text-sm font-semibold text-accent-green">● Connected</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Last Sync</span>
+                        <span class="text-sm font-semibold text-white">2 min ago</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Firmware</span>
+                        <span class="text-sm font-semibold text-white">v2.1.0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Alerts -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-white">Recent Alerts</h3>
+                    <span id="unreadCount" class="px-3 py-1 bg-accent-red/20 text-accent-red rounded-full text-xs font-bold">3</span>
+                </div>
+                
+                <!-- Alert Filters -->
+                <div class="flex space-x-2 mb-4">
+                    <button class="alert-filter px-3 py-1 text-xs rounded-full bg-accent-blue text-white font-medium">All</button>
+                    <button class="alert-filter px-3 py-1 text-xs rounded-full glass border border-dark-600 text-gray-400 hover:text-white">Critical</button>
+                    <button class="alert-filter px-3 py-1 text-xs rounded-full glass border border-dark-600 text-gray-400 hover:text-white">High</button>
+                </div>
+                
+                <!-- Alerts List -->
+                <div id="alertsList" class="space-y-3 max-h-[400px] overflow-y-auto">
+                    <!-- Fall Alert -->
+                    <div class="glass rounded-lg p-4 border-l-4 border-accent-red hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-accent-red rounded-full mr-2"></div>
+                                <span class="font-semibold text-white text-sm">Fall Detected</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2h ago</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">📍 Bathroom</p>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-accent-red/20 text-accent-red text-xs rounded-full font-bold">CRITICAL</span>
+                            <button class="text-xs text-accent-blue hover:underline">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Medication Alert -->
+                    <div class="glass rounded-lg p-4 border-l-4 border-accent-orange hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-accent-orange rounded-full mr-2"></div>
+                                <span class="font-semibold text-white text-sm">Medication Missed</span>
+                            </div>
+                            <span class="text-xs text-gray-400">4h ago</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">💊 Evening dose not taken</p>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-accent-orange/20 text-accent-orange text-xs rounded-full font-bold">HIGH</span>
+                            <button class="text-xs text-accent-blue hover:underline">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Low Battery Alert -->
+                    <div class="glass rounded-lg p-4 border-l-4 border-accent-blue hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center">
+                                <span class="font-semibold text-white text-sm">Battery Low</span>
+                            </div>
+                            <span class="text-xs text-gray-400">6h ago</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">🔋 Battery below 20%</p>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-accent-blue/20 text-accent-blue text-xs rounded-full font-bold">MEDIUM</span>
+                            <button class="text-xs text-accent-blue hover:underline">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="glass rounded-2xl p-6 border border-dark-600 card">
+                <h3 class="text-lg font-bold text-white mb-4">Quick Actions</h3>
+                <div class="space-y-3">
+                    <button class="w-full bg-gradient-to-r from-accent-blue to-blue-600 hover:from-accent-blue hover:to-blue-700 text-white py-3 rounded-lg font-semibold hover-lift flex items-center justify-center">
+                        <span class="mr-2">📞</span> Call Patient
+                    </button>
+                    <button class="w-full bg-gradient-to-r from-accent-green to-green-600 hover:from-accent-green hover:to-green-700 text-white py-3 rounded-lg font-semibold hover-lift flex items-center justify-center">
+                        <span class="mr-2">✍️</span> Add Care Note
+                    </button>
+                    <button class="w-full bg-gradient-to-r from-accent-purple to-purple-600 hover:from-accent-purple hover:to-purple-700 text-white py-3 rounded-lg font-semibold hover-lift flex items-center justify-center">
+                        <span class="mr-2">📊</span> View Reports
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- System Overview -->
+    <div class="glass rounded-2xl p-6 border border-dark-600 card">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="text-sm font-bold text-white mb-2 flex items-center">
+                    <span class="mr-2">🛡️</span>NovaCare Fall Detection System
+                </h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Intelligent monitoring system using Edge AI and Computer Vision on Raspberry Pi 5. 
+                    Real-time fall detection with ≥95% accuracy using MediaPipe Pose estimation.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-2 flex items-center">
+                    <span class="mr-2">📡</span>Real-Time Alerts
+                </h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Instant notifications via MQTT protocol. Automated emergency response with location details, 
+                    patient information, and environmental data in &lt;2 seconds.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Powered by Stitch Watermark -->
+    <div class="mt-6 text-center">
+        <div class="group inline-block cursor-pointer">
+            <p class="text-gray-500 transition-all duration-300 group-hover:text-accent-blue group-hover:scale-110 inline-flex items-center">
+                <span class="mr-2">⚡</span>
+                <span class="text-sm">Powered by</span>
+                <span class="ml-2 font-bold text-lg gradient-text group-hover:animate-pulse">Stitch</span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/caregiver/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/caregiver/ui.js') }}"></script>
+{% endblock %}

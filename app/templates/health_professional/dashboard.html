@@ -1,0 +1,598 @@
+{% extends "base.html" %}
+
+{% block title %}Health Professional Dashboard - NovaBot{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-gradient-to-r from-teal-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+        <h1 class="text-3xl font-bold mb-2">Health Professional Dashboard</h1>
+        <p class="text-lg opacity-90">Patient health monitoring & analytics</p>
+    </div>
+    
+    <!-- Patient Info Banner -->
+    <div class="glass rounded-2xl p-6 border border-dark-600 card">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-white">Patient: John Doe</h2>
+                <p class="text-gray-400">ID: patient_001 | Age: 72 | Male</p>
+            </div>
+            <button id="generateReportBtn" class="bg-gradient-to-r from-accent-green to-green-600 hover:from-accent-green hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold hover-lift flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Generate Report</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Project Overview -->
+    <div class="glass rounded-2xl p-6 border border-dark-600 card">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-white mb-2">🛡️ About NovaCare Fall Detection System</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Real-time monitoring system for elderly and individuals with physical disabilities using <span class="text-accent-blue font-semibold">Edge AI</span> and <span class="text-accent-purple font-semibold">Computer Vision</span>. 
+                    Achieving <span class="text-accent-green font-semibold">≥95% detection accuracy</span> with instant alerts to caregivers.
+                </p>
+            </div>
+            <div class="text-right">
+                <div class="text-xs text-gray-500 mb-1">IoT Architecture</div>
+                <div class="text-sm font-semibold text-accent-blue">4-Layer + MQTT</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Current Vitals Grid -->
+    <section class="mt-6">
+        <h2 class="text-2xl font-bold text-white mb-4">Current Vital Signs</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Heart Rate -->
+            <div class="glass rounded-xl p-6 border-l-4 border-accent-red card hover-lift">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-400">Heart Rate</span>
+                    <svg class="w-6 h-6 text-accent-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <p id="heartRate" class="text-3xl font-bold text-white mb-1">--</p>
+                <p class="text-sm text-gray-400">bpm</p>
+                <span id="hrStatus" class="inline-block mt-2 px-2 py-1 bg-accent-green/20 text-accent-green text-xs font-semibold rounded">Normal</span>
+            </div>
+            
+            <!-- Blood Pressure -->
+            <div class="glass rounded-xl p-6 border-l-4 border-accent-blue card hover-lift">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-400">Blood Pressure</span>
+                    <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <p id="bloodPressure" class="text-3xl font-bold text-white mb-1">--/--</p>
+                <p class="text-sm text-gray-400">mmHg</p>
+                <span id="bpStatus" class="inline-block mt-2 px-2 py-1 bg-accent-green/20 text-accent-green text-xs font-semibold rounded">Normal</span>
+            </div>
+            
+            <!-- Oxygen Saturation -->
+            <div class="glass rounded-xl p-6 border-l-4 border-accent-purple card hover-lift">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-400">SpO2</span>
+                    <svg class="w-6 h-6 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                </div>
+                <p id="oxygenSat" class="text-3xl font-bold text-white mb-1">--</p>
+                <p class="text-sm text-gray-400">%</p>
+                <span id="spo2Status" class="inline-block mt-2 px-2 py-1 bg-accent-green/20 text-accent-green text-xs font-semibold rounded">Normal</span>
+            </div>
+            
+            <!-- Temperature -->
+            <div class="glass rounded-xl p-6 border-l-4 border-accent-orange card hover-lift">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-400">Temperature</span>
+                    <svg class="w-6 h-6 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <p id="temperature" class="text-3xl font-bold text-white mb-1">--</p>
+                <p class="text-sm text-gray-400">°C</p>
+                <span id="tempStatus" class="inline-block mt-2 px-2 py-1 bg-accent-green/20 text-accent-green text-xs font-semibold rounded">Normal</span>
+            </div>
+            
+            <!-- Respiratory Rate -->
+            <div class="glass rounded-xl p-6 border-l-4 border-accent-green card hover-lift">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-400">Resp. Rate</span>
+                    <svg class="w-6 h-6 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                    </svg>
+                </div>
+                <p id="respRate" class="text-3xl font-bold text-white mb-1">--</p>
+                <p class="text-sm text-gray-400">breaths/min</p>
+                <span id="rrStatus" class="inline-block mt-2 px-2 py-1 bg-accent-green/20 text-accent-green text-xs font-semibold rounded">Normal</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Charts & Trends -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Vitals Chart -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">24-Hour Vitals Trends</h3>
+            <div class="bg-dark-700 rounded-xl p-4">
+                <canvas id="vitalsChart" height="250"></canvas>
+            </div>
+        </div>
+        
+        <!-- Health Trends -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">Weekly Activity Pattern</h3>
+            <div class="bg-dark-700 rounded-xl p-4">
+                <canvas id="activityChart" height="250"></canvas>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Additional Charts Row -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Blood Pressure Trends -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">Blood Pressure Trends (7 Days)</h3>
+            <div class="bg-dark-700 rounded-xl p-4">
+                <canvas id="bpChart" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- 7-Day Health Summary -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">7-Day Health Summary</h3>
+            <div id="trendsData" class="space-y-4">
+                <p class="text-gray-400 italic">Loading trends...</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Medication Adherence & Fall Incidents -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Medication Adherence -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">Medication Adherence</h3>
+            <div id="medicationAdherence">
+                <p class="text-gray-400 italic">Loading...</p>
+            </div>
+        </div>
+        
+        <!-- Fall Incidents -->
+        <div class="glass rounded-2xl p-6 border border-dark-600 card">
+            <h3 class="text-xl font-bold text-white mb-4">Fall Incident History</h3>
+            <div id="fallIncidents">
+                <p class="text-gray-400 italic">Loading...</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Clinical Notes -->
+    <section class="glass rounded-2xl p-6 border border-dark-600 card">
+        <h3 class="text-xl font-bold text-white mb-4">Add Clinical Note</h3>
+        <div class="space-y-4">
+            <textarea id="clinicalNoteInput" 
+                      rows="4" 
+                      class="w-full bg-dark-700 text-white px-4 py-3 border-2 border-dark-600 rounded-lg focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 outline-none"
+                      placeholder="Enter clinical observations..."></textarea>
+            <button id="saveClinicalNoteBtn" class="bg-gradient-to-r from-accent-green to-green-600 hover:from-accent-green hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold hover-lift">
+                Save Note
+            </button>
+        </div>
+    </section>
+    
+    <!-- Powered by Stitch Watermark -->
+    <div class="mt-6 text-center">
+        <div class="group inline-block cursor-pointer">
+            <p class="text-gray-500 transition-all duration-300 group-hover:text-accent-blue group-hover:scale-110 inline-flex items-center">
+                <span class="mr-2">⚡</span>
+                <span class="text-sm">Powered by</span>
+                <span class="ml-2 font-bold text-lg gradient-text group-hover:animate-pulse">Stitch</span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+// Chart.js Configuration for Dark Theme
+Chart.defaults.color = '#9ca3af';
+Chart.defaults.borderColor = '#374151';
+Chart.defaults.backgroundColor = 'rgba(79, 156, 249, 0.1)';
+
+// 24-Hour Vitals Trends Chart
+const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');
+const vitalsChart = new Chart(vitalsCtx, {
+    type: 'line',
+    data: {
+        labels: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+        datasets: [
+            {
+                label: 'Heart Rate (bpm)',
+                data: [68, 70, 72, 75, 78, 76, 74, 72, 70, 73, 71, 69],
+                borderColor: '#ff4d4d',
+                backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2
+            },
+            {
+                label: 'SpO2 (%)',
+                data: [97, 98, 97, 98, 98, 97, 98, 98, 97, 98, 98, 97],
+                borderColor: '#9747ff',
+                backgroundColor: 'rgba(151, 71, 255, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2
+            },
+            {
+                label: 'Temperature (°C)',
+                data: [36.5, 36.6, 36.7, 36.8, 36.9, 36.8, 36.8, 36.7, 36.8, 36.8, 36.7, 36.6],
+                borderColor: '#ff9a3c',
+                backgroundColor: 'rgba(255, 154, 60, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2,
+                yAxisID: 'y1'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#fff',
+                    padding: 15,
+                    font: {
+                        size: 12,
+                        weight: '600'
+                    },
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(30, 33, 57, 0.95)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#4f9cf9',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += context.parsed.y.toFixed(1);
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            y: {
+                position: 'left',
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Heart Rate & SpO2',
+                    color: '#9ca3af',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            },
+            y1: {
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Temperature (°C)',
+                    color: '#9ca3af',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Weekly Activity Pattern Chart
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+const activityChart = new Chart(activityCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [
+            {
+                label: 'Steps',
+                data: [5200, 6800, 4500, 7200, 5900, 3200, 4100],
+                backgroundColor: 'rgba(79, 156, 249, 0.8)',
+                borderColor: '#4f9cf9',
+                borderWidth: 2,
+                borderRadius: 6,
+                yAxisID: 'y'
+            },
+            {
+                label: 'Active Minutes',
+                data: [45, 62, 38, 71, 54, 28, 35],
+                backgroundColor: 'rgba(0, 212, 170, 0.8)',
+                borderColor: '#00d4aa',
+                borderWidth: 2,
+                borderRadius: 6,
+                yAxisID: 'y1'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#fff',
+                    padding: 15,
+                    font: {
+                        size: 12,
+                        weight: '600'
+                    },
+                    usePointStyle: true,
+                    pointStyle: 'rect'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(30, 33, 57, 0.95)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#4f9cf9',
+                borderWidth: 1,
+                padding: 12
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            },
+            y: {
+                position: 'left',
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Steps',
+                    color: '#4f9cf9',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            },
+            y1: {
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Active Minutes',
+                    color: '#00d4aa',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Blood Pressure Trends Chart
+const bpCtx = document.getElementById('bpChart').getContext('2d');
+const bpChart = new Chart(bpCtx, {
+    type: 'line',
+    data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+        datasets: [
+            {
+                label: 'Systolic',
+                data: [125, 122, 120, 118, 120, 121, 120],
+                borderColor: '#ff4d4d',
+                backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderWidth: 3
+            },
+            {
+                label: 'Diastolic',
+                data: [82, 80, 80, 78, 80, 81, 80],
+                borderColor: '#4f9cf9',
+                backgroundColor: 'rgba(79, 156, 249, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderWidth: 3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#fff',
+                    padding: 15,
+                    font: {
+                        size: 12,
+                        weight: '600'
+                    },
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(30, 33, 57, 0.95)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#4f9cf9',
+                borderWidth: 1,
+                padding: 12,
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y + ' mmHg';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            y: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    },
+                    callback: function(value) {
+                        return value + ' mmHg';
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Blood Pressure (mmHg)',
+                    color: '#9ca3af',
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Animate charts on load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        vitalsChart.update('show');
+        activityChart.update('show');
+        bpChart.update('show');
+    }, 300);
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/health_professional/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/health_professional/ui.js') }}"></script>
+{% endblock %}
+

@@ -4,9 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
-venv/
-ENV/
 build/
 develop-eggs/
 dist/
@@ -23,9 +20,18 @@ wheels/
 .installed.cfg
 *.egg
 
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
 # Flask
 instance/
 .webassets-cache
+*.db
+*.sqlite
+*.sqlite3
 
 # IDEs
 .vscode/
@@ -38,10 +44,18 @@ instance/
 .DS_Store
 Thumbs.db
 
-# Environment
+# Environment variables
 .env
 .env.local
 
 # Logs
 *.log
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node (if using npm for frontend tools)
+node_modules/
+package-lock.json

@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Primary User Dashboard - NovaCare{% endblock %}
+
+{% block page_title %}NovaCare Primary User{% endblock %}
+{% block page_subtitle %}Fall Detection System • Your Intelligent Safety Companion{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    
+    <!-- Quick Stats Row -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="glass rounded-xl p-6 hover-lift card border border-accent-blue/20">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Active Mode</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-blue/20 flex items-center justify-center">
+                    🎤
+                </div>
+            </div>
+            <div id="currentMode" class="text-2xl font-bold text-white">Touch</div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 hover-lift card border border-accent-green/20">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Follow Mode</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-green/20 flex items-center justify-center">
+                    👁️
+                </div>
+            </div>
+            <div id="followStatus" class="text-2xl font-bold text-white">Inactive</div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 hover-lift card border border-accent-orange/20">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Next Med</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-orange/20 flex items-center justify-center">
+                    💊
+                </div>
+            </div>
+            <div id="nextMedTime" class="text-2xl font-bold text-white">2h 30m</div>
+        </div>
+        
+        <div class="glass rounded-xl p-6 hover-lift card border border-accent-purple/20">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm text-gray-400">Status</span>
+                <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center">
+                    ✨
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-white">All Good</div>
+        </div>
+    </div>
+    
+    <!-- Communication Hub -->
+    <div class="glass rounded-2xl p-8 border border-dark-600 card">
+        <div class="flex items-center mb-6">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-blue to-blue-600 flex items-center justify-center text-2xl mr-4">
+                💬
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-white">Communication Hub</h2>
+                <p class="text-sm text-gray-400">Select your preferred input method</p>
+            </div>
+        </div>
+        
+        <!-- Input Mode Buttons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <button data-mode="spoken" class="input-mode-btn glass p-6 rounded-xl border-2 border-transparent hover:border-accent-blue transition-all group">
+                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎤</div>
+                <div class="text-xl font-bold text-white mb-2">Spoken</div>
+                <div class="text-sm text-gray-400 mb-3">Voice commands</div>
+                <div class="status-badge hidden">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-xs font-bold">
+                        <span class="w-2 h-2 bg-accent-green rounded-full mr-2 animate-pulse"></span>
+                        ACTIVE
+                    </div>
+                </div>
+            </button>
+            
+            <button data-mode="sign_language" class="input-mode-btn glass p-6 rounded-xl border-2 border-transparent hover:border-accent-blue transition-all group">
+                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">✋</div>
+                <div class="text-xl font-bold text-white mb-2">Sign Language</div>
+                <div class="text-sm text-gray-400 mb-3">Visual recognition</div>
+                <div class="status-badge hidden">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-xs font-bold">
+                        <span class="w-2 h-2 bg-accent-green rounded-full mr-2 animate-pulse"></span>
+                        ACTIVE
+                    </div>
+                </div>
+            </button>
+            
+            <button data-mode="touch" class="input-mode-btn glass p-6 rounded-xl border-2 border-transparent hover:border-accent-blue transition-all group">
+                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">👆</div>
+                <div class="text-xl font-bold text-white mb-2">Touch</div>
+                <div class="text-sm text-gray-400 mb-3">Tap interface</div>
+                <div class="status-badge hidden">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-xs font-bold">
+                        <span class="w-2 h-2 bg-accent-green rounded-full mr-2 animate-pulse"></span>
+                        ACTIVE
+                    </div>
+                </div>
+            </button>
+        </div>
+        
+        <!-- Visual Feedback Display -->
+        <div class="bg-dark-700 rounded-xl p-6 border border-dark-600">
+            <div class="flex items-center mb-4">
+                <div class="text-accent-blue mr-2">📺</div>
+                <h3 class="font-bold text-white">Visual Feedback</h3>
+            </div>
+            <div id="visualFeedback" class="text-gray-300 leading-relaxed min-h-[100px]">
+                <p class="text-gray-500 italic">Speech-to-text and system responses will appear here...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Health & Medication -->
+        <div class="glass rounded-2xl p-8 border border-dark-600 card">
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-green to-green-600 flex items-center justify-center text-2xl mr-4">
+                    💊
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Health & Medication</h2>
+                    <p class="text-sm text-gray-400">Your health companion</p>
+                </div>
+            </div>
+            
+            <!-- Next Medication Card -->
+            <div id="nextMedicationCard" class="bg-gradient-to-br from-accent-green/10 to-green-900/10 border-2 border-accent-green/30 rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Next Medication</p>
+                        <h3 id="medName" class="text-2xl font-bold text-white mb-2">Loading...</h3>
+                        <p id="medDosage" class="text-accent-green font-medium"></p>
+                    </div>
+                    <div class="text-5xl">⏰</div>
+                </div>
+                <div class="flex items-center text-sm text-gray-400">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span id="medTime"></span>
+                </div>
+            </div>
+            
+            <!-- Medical Query -->
+            <div class="border border-dark-600 rounded-xl overflow-hidden">
+                <div class="bg-dark-700 px-4 py-3 border-b border-dark-600">
+                    <h3 class="font-bold text-white flex items-center">
+                        <span class="mr-2">🩺</span>
+                        Medical Assistant (RAG)
+                    </h3>
+                </div>
+                <div id="chatHistory" class="bg-dark-800 p-4 h-48 overflow-y-auto space-y-3">
+                    <p class="text-gray-500 italic text-sm">Ask me any medical question...</p>
+                </div>
+                <div class="flex p-3 bg-dark-700 border-t border-dark-600">
+                    <input type="text" id="medicalQueryInput" 
+                           class="flex-1 bg-dark-600 text-gray-300 px-4 py-3 rounded-lg border border-dark-500 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/20 outline-none"
+                           placeholder="Type your question..." />
+                    <button id="sendQueryBtn" 
+                            class="ml-3 bg-gradient-to-r from-accent-blue to-blue-600 hover:from-accent-blue hover:to-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-all hover-lift">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation & Vision -->
+        <div class="glass rounded-2xl p-8 border border-dark-600 card">
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-purple to-purple-600 flex items-center justify-center text-2xl mr-4">
+                    👁️
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Navigation & Vision</h2>
+                    <p class="text-sm text-gray-400">AI-powered assistance</p>
+                </div>
+            </div>
+            
+            <!-- Follow Mode Toggle -->
+            <div class="bg-gradient-to-br from-accent-purple/10 to-purple-900/10 border-2 border-accent-purple/30 rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Follow Mode</h3>
+                        <p class="text-sm text-gray-400">Autonomous person tracking</p>
+                    </div>
+                    <button id="followModeToggle" 
+                            class="relative w-20 h-10 bg-dark-600 rounded-full transition-colors">
+                        <span id="followModeSlider" class="absolute top-1 left-1 w-8 h-8 bg-white rounded-full shadow-lg transition-transform"></span>
+                    </button>
+                </div>
+                <div id="followModeStatus" class="mt-4 text-sm font-semibold text-gray-400"></div>
+            </div>
+            
+            <!-- Vision Assistance -->
+            <div class="space-y-3">
+                <button id="identifyObjectBtn" class="w-full glass p-4 rounded-xl border border-accent-blue/30 hover:border-accent-blue hover-lift flex items-center justify-between group">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-accent-blue/20 flex items-center justify-center text-xl mr-3 group-hover:scale-110 transition-transform">
+                            🔍
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-white">Identify Object</div>
+                            <div class="text-xs text-gray-400">Recognize objects around you</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                
+                <button id="readTextBtn" class="w-full glass p-4 rounded-xl border border-accent-green/30 hover:border-accent-green hover-lift flex items-center justify-between group">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-accent-green/20 flex items-center justify-center text-xl mr-3 group-hover:scale-110 transition-transform">
+                            📖
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-white">Read Text (OCR)</div>
+                            <div class="text-xs text-gray-400">Extract text from images</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                
+                <button id="describeSceneBtn" class="w-full glass p-4 rounded-xl border border-accent-purple/30 hover:border-accent-purple hover-lift flex items-center justify-between group">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center text-xl mr-3 group-hover:scale-110 transition-transform">
+                            🖼️
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-white">Describe Scene</div>
+                            <div class="text-xs text-gray-400">AI scene description</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Powered by Stitch Watermark -->
+    <div class="mt-6 text-center">
+        <div class="group inline-block cursor-pointer">
+            <p class="text-gray-500 transition-all duration-300 group-hover:text-accent-blue group-hover:scale-110 inline-flex items-center">
+                <span class="mr-2">⚡</span>
+                <span class="text-sm">Powered by</span>
+                <span class="ml-2 font-bold text-lg gradient-text group-hover:animate-pulse">Stitch</span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/primary_user/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/primary_user/ui.js') }}"></script>
+{% endblock %}
