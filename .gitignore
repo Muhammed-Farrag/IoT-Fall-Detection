@@ -45,3 +45,13 @@ Thumbs.db
 # Logs
 *.log
 
+# Recordings (fall videos)
+app/static/recordings/*.mp4
+app/static/recordings/*.avi
+
+# Database
+*.db
+instance/
+
+# MediaPipe cache
+.mediapipe/

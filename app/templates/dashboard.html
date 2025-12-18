@@ -329,25 +329,60 @@
 
 <!-- Stream Modal -->
 <div class="modal fade" id="streamModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="background: var(--dark-card);">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold">
-                    <i class="fas fa-video me-2 text-primary"></i>Live Camera Stream
+                <h5 class="modal-title fw-bold text-white">
+                    <i class="fas fa-video me-2 text-primary"></i>Live Camera Stream - Raspberry Pi
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <div class="stream-placeholder">
-                    <i class="fas fa-video fa-4x text-muted mb-3"></i>
-                    <h5 class="text-muted">Live stream will appear here</h5>
-                    <p class="text-muted">Connect backend camera feed to enable streaming</p>
-                    <button class="btn btn-primary mt-3" disabled>
-                        <i class="fas fa-play me-2"></i>Start Stream
-                    </button>
+            <div class="modal-body p-0">
+                <div id="stream-container" style="width: 100%; min-height: 400px; background: #000; border-radius: 0 0 8px 8px; display: flex; align-items: center; justify-content: center;">
+                    <div id="stream-placeholder" class="text-center text-white">
+                        <i class="fas fa-spinner fa-spin fa-3x mb-3"></i>
+                        <h5>Connecting to Raspberry Pi camera...</h5>
+                        <p class="text-muted">IP: 192.168.137.77:8000</p>
+                    </div>
+                    <img id="live-stream" 
+                         src="" 
+                         alt="Live Camera Feed" 
+                         style="width: 100%; height: auto; display: none; border-radius: 0 0 8px 8px;"
+                         onload="document.getElementById('stream-placeholder').style.display='none'; this.style.display='block';"
+                         onerror="document.getElementById('stream-placeholder').innerHTML='<i class=\'fas fa-exclamation-triangle fa-3x mb-3 text-warning\'></i><h5>Camera not available</h5><p class=\'text-muted\'>Make sure raspi_camera_server.py is running on your Pi</p><button class=\'btn btn-primary mt-3\' onclick=\'retryStream()\'>Retry Connection</button>';">
                 </div>
+            </div>
+            <div class="modal-footer border-0" style="background: var(--dark-card);">
+                <span class="text-success me-auto"><i class="fas fa-circle me-1"></i> Live</span>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function startStream() {
+    const img = document.getElementById('live-stream');
+    const placeholder = document.getElementById('stream-placeholder');
+    placeholder.innerHTML = '<i class="fas fa-spinner fa-spin fa-3x mb-3"></i><h5>Connecting to Raspberry Pi camera...</h5>';
+    placeholder.style.display = 'block';
+    img.style.display = 'none';
+    // Use Flask proxy to avoid CORS issues
+    img.src = '/api/video/pi-stream?' + new Date().getTime();
+}
+
+function retryStream() {
+    startStream();
+}
+
+// Start stream when modal opens
+document.getElementById('streamModal').addEventListener('shown.bs.modal', function () {
+    startStream();
+});
+
+// Stop stream when modal closes
+document.getElementById('streamModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('live-stream').src = '';
+});
+</script>
 {% endblock %}
