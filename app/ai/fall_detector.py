@@ -112,6 +112,19 @@ class FullBodyFallDetector:
                 self._reset_fall_state()
             return DetectionResult.NO_PERSON, {'status': 'no_person'}
         
+        # CHECK VISIBILITY - Require clear detection of key body parts
+        # This prevents false detections from background noise or partial views
+        min_visibility = 0.6  # Require 60% confidence on key landmarks
+        key_landmarks = ['left_shoulder', 'right_shoulder', 'left_hip', 'right_hip']
+        visibilities = [landmarks.get(lm, {}).get('visibility', 0) for lm in key_landmarks]
+        avg_visibility = sum(visibilities) / len(visibilities) if visibilities else 0
+        
+        if avg_visibility < min_visibility:
+            # Not enough confidence that we're seeing a real person
+            analysis['status'] = 'low_visibility'
+            analysis['visibility'] = avg_visibility
+            return DetectionResult.NO_PERSON, analysis
+        
         # Get body posture
         posture, posture_confidence = self._analyze_posture(landmarks)
         analysis['posture'] = posture.value

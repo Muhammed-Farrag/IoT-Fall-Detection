@@ -102,7 +102,11 @@ if __name__ == '__main__':
     socketio.start_background_task(start_detection)
     
     print("🌐 Opening browser at: http://localhost:5000/dashboard")
-    print("📹 Live stream will connect to Raspberry Pi camera")
+    from config import Config
+    if Config.USE_RASPBERRY_PI_CAMERA:
+        print(f"📹 Live stream will connect to Raspberry Pi camera: {Config.RASPI_STREAM_URL}")
+    else:
+        print("📷 Live stream will use laptop webcam")
     print("\n   Press Ctrl+C to stop the server\n")
     
     # Run with SocketIO

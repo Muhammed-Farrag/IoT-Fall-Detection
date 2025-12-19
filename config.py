@@ -19,7 +19,9 @@ class Config:
     # Camera Settings
     CAMERA_RESOLUTION = (640, 480)
     CAMERA_FPS = 30
-    USE_RASPBERRY_PI_CAMERA = os.getenv('USE_PI_CAMERA', 'false').lower() == 'true'
+    # Set to True for Pi camera stream, False for laptop webcam
+    # LAPTOP TESTING MODE: Force local webcam (change back for Pi deployment)
+    USE_RASPBERRY_PI_CAMERA = False  # os.getenv('USE_PI_CAMERA', 'false').lower() == 'true'
     
     # Raspberry Pi Camera Stream URL (when Pi runs as separate server)
     RASPI_STREAM_URL = os.getenv('RASPI_STREAM_URL', 'http://raspberrypi.local:8000/video_feed')
